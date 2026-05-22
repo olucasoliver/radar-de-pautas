@@ -12,6 +12,7 @@
   --gold: #9b6b18;
   --green: #247357;
   --blue: #305f9f;
+  --danger-soft: #fff0ed;
   --shadow: 0 16px 38px rgba(21, 25, 31, 0.1);
 }
 
@@ -42,6 +43,11 @@ button {
   border-radius: 0;
 }
 
+svg {
+  height: 18px;
+  width: 18px;
+}
+
 .app-shell {
   display: grid;
   grid-template-columns: 270px minmax(0, 1fr);
@@ -61,10 +67,13 @@ button {
 }
 
 .brand,
-.user-chip {
+.user-chip,
+.nav-item,
+.button,
+.back-button {
   align-items: center;
   display: flex;
-  gap: 12px;
+  gap: 10px;
 }
 
 .brand-mark,
@@ -78,6 +87,11 @@ button {
   height: 42px;
   place-items: center;
   width: 42px;
+}
+
+.avatar.small {
+  height: 34px;
+  width: 34px;
 }
 
 .brand strong,
@@ -179,12 +193,39 @@ h3 {
 .user-chip {
   background: var(--surface);
   border: 1px solid var(--line);
-  min-width: 230px;
+  color: var(--ink);
+  cursor: pointer;
+  min-width: 250px;
   padding: 10px;
+  text-align: left;
 }
 
 .user-chip small {
   color: var(--muted);
+}
+
+.onboarding-banner {
+  align-items: center;
+  background: #fff8e8;
+  border: 1px solid #ead39c;
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  padding: 16px;
+}
+
+.onboarding-banner.is-hidden {
+  display: none;
+}
+
+.onboarding-banner strong,
+.onboarding-banner span {
+  display: block;
+}
+
+.onboarding-banner span {
+  color: var(--muted);
+  margin-top: 3px;
 }
 
 .stats-row {
@@ -198,7 +239,10 @@ h3 {
 .compose-card,
 .profile-card,
 .profile-preview,
-.pitch-card {
+.pitch-card,
+.detail-card,
+.detail-side,
+.quick-composer {
   background: var(--surface);
   border: 1px solid var(--line);
   box-shadow: 0 6px 20px rgba(21, 25, 31, 0.05);
@@ -236,6 +280,21 @@ h3 {
   margin-bottom: 14px;
 }
 
+.search-field {
+  position: relative;
+}
+
+.search-field svg {
+  color: var(--muted);
+  left: 12px;
+  position: absolute;
+  top: 13px;
+}
+
+.search-field input {
+  padding-left: 38px;
+}
+
 label {
   color: var(--ink);
   display: grid;
@@ -270,12 +329,36 @@ textarea:focus {
   align-items: start;
   display: grid;
   gap: 16px;
-  grid-template-columns: minmax(0, 1fr) 300px;
+  grid-template-columns: minmax(0, 1fr) 310px;
 }
 
 .feed-list {
   display: grid;
   gap: 12px;
+}
+
+.quick-composer {
+  margin-bottom: 12px;
+  padding: 12px;
+}
+
+.quick-composer-main {
+  align-items: center;
+  background: var(--surface-soft);
+  border: 1px solid var(--line);
+  color: var(--muted);
+  cursor: pointer;
+  display: flex;
+  gap: 10px;
+  min-height: 54px;
+  padding: 9px;
+  text-align: left;
+  width: 100%;
+}
+
+.quick-composer-main:hover {
+  border-color: var(--primary);
+  color: var(--ink);
 }
 
 .right-panel {
@@ -289,7 +372,9 @@ textarea:focus {
 .compose-card,
 .profile-card,
 .profile-preview,
-.pitch-card {
+.pitch-card,
+.detail-card,
+.detail-side {
   padding: 18px;
 }
 
@@ -297,7 +382,9 @@ textarea:focus {
 .panel-block li,
 .pitch-card p,
 .profile-preview p,
-.form-footer p {
+.form-footer p,
+.detail-card p,
+.update-item p {
   color: var(--muted);
 }
 
@@ -307,11 +394,30 @@ textarea:focus {
 }
 
 .pitch-card {
+  border-left: 5px solid transparent;
+  cursor: pointer;
   display: grid;
   gap: 13px;
 }
 
-.pitch-card header {
+.pitch-card:hover {
+  border-color: var(--primary);
+}
+
+.pitch-card.urgency-alta {
+  border-left-color: var(--accent);
+}
+
+.pitch-card.urgency-media {
+  border-left-color: var(--gold);
+}
+
+.pitch-card.urgency-baixa {
+  border-left-color: var(--green);
+}
+
+.pitch-card header,
+.detail-header {
   align-items: start;
   display: flex;
   gap: 14px;
@@ -325,7 +431,8 @@ textarea:focus {
 .meta-row,
 .tag-row,
 .card-actions,
-.author-row {
+.author-row,
+.detail-actions {
   align-items: center;
   display: flex;
   flex-wrap: wrap;
@@ -360,7 +467,7 @@ textarea:focus {
 }
 
 .pill.urgency-alta {
-  background: #fff0ed;
+  background: var(--danger-soft);
   border-color: #efb2a9;
   color: var(--accent);
 }
@@ -378,31 +485,42 @@ textarea:focus {
   color: var(--green);
 }
 
-.pill.status-em-apuracao {
+.pill.status-em-checagem,
+.pill.status-em-cobertura {
   background: #edf4ff;
   border-color: #bfd3f2;
   color: var(--blue);
 }
 
+.pill.status-descartado {
+  background: #f1f3f5;
+  border-color: #cfd5dc;
+  color: #5d6570;
+}
+
 .card-actions button,
-.button {
+.detail-actions button,
+.button,
+.back-button {
   border: 1px solid transparent;
   cursor: pointer;
-  display: inline-flex;
   font-weight: 800;
   justify-content: center;
   min-height: 42px;
   padding: 10px 13px;
 }
 
-.card-actions button {
+.card-actions button,
+.detail-actions button,
+.back-button {
   background: #fff;
   border-color: var(--line);
   color: var(--ink);
   font-size: 13px;
 }
 
-.card-actions button:hover {
+.card-actions button:hover,
+.back-button:hover {
   border-color: var(--primary);
   color: var(--primary);
 }
@@ -437,8 +555,29 @@ textarea:focus {
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
-.form-grid.two {
+.form-grid.fast {
+  grid-template-columns: 1fr 150px 1.5fr;
+}
+
+.form-grid.two,
+.advanced-grid {
+  display: grid;
+  gap: 12px;
   grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.advanced-fields {
+  border: 1px solid var(--line);
+  padding: 14px;
+}
+
+.advanced-fields summary {
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.advanced-grid {
+  margin-top: 14px;
 }
 
 .form-footer {
@@ -448,13 +587,15 @@ textarea:focus {
   justify-content: space-between;
 }
 
-.profile-grid {
+.profile-grid,
+.detail-layout {
   display: grid;
   gap: 16px;
   grid-template-columns: minmax(0, 1fr) 320px;
 }
 
-.profile-preview {
+.profile-preview,
+.detail-side {
   align-content: start;
   display: grid;
   gap: 12px;
@@ -464,6 +605,52 @@ textarea:focus {
   font-size: 24px;
   height: 76px;
   width: 76px;
+}
+
+.back-button {
+  margin-bottom: 12px;
+}
+
+.detail-card {
+  border-left: 5px solid var(--primary);
+  display: grid;
+  gap: 16px;
+}
+
+.detail-card.urgency-alta {
+  border-left-color: var(--accent);
+}
+
+.detail-card.urgency-media {
+  border-left-color: var(--gold);
+}
+
+.detail-body {
+  font-size: 17px;
+}
+
+.detail-section {
+  border-top: 1px solid var(--line);
+  display: grid;
+  gap: 12px;
+  padding-top: 16px;
+}
+
+.update-form {
+  display: grid;
+  gap: 10px;
+}
+
+.update-item {
+  background: var(--surface-soft);
+  border: 1px solid var(--line);
+  display: grid;
+  gap: 5px;
+  padding: 12px;
+}
+
+.update-item strong {
+  font-size: 14px;
 }
 
 .empty-state {
@@ -488,7 +675,7 @@ textarea:focus {
   }
 
   .main-app {
-    padding-bottom: 86px;
+    padding-bottom: 88px;
   }
 
   .mobile-nav {
@@ -506,13 +693,16 @@ textarea:focus {
   }
 
   .mobile-nav .nav-item {
+    display: grid;
+    justify-items: center;
     text-align: center;
   }
 }
 
 @media (max-width: 860px) {
   .topbar,
-  .form-footer {
+  .form-footer,
+  .onboarding-banner {
     align-items: stretch;
     display: grid;
   }
@@ -525,8 +715,11 @@ textarea:focus {
   .toolbar,
   .feed-layout,
   .form-grid,
+  .form-grid.fast,
   .form-grid.two,
-  .profile-grid {
+  .advanced-grid,
+  .profile-grid,
+  .detail-layout {
     grid-template-columns: 1fr;
   }
 
@@ -534,7 +727,8 @@ textarea:focus {
     position: static;
   }
 
-  .pitch-card header {
+  .pitch-card header,
+  .detail-header {
     display: grid;
   }
 }

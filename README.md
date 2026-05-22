@@ -1,19 +1,36 @@
 # Radar MS
 
-Prototipo de uma rede social profissional para jornalistas de Mato Grosso do Sul compartilharem factuais, pistas de apuracao e sugestoes de pauta.
+Protótipo de uma rede social profissional para jornalistas de Mato Grosso do Sul compartilharem factuais, pistas de apuração e sugestões de pauta.
 
-Esta versao e estatica: nao precisa instalar nada e pode ser publicada no GitHub Pages.
+Esta versão é estática: não precisa instalar nada e pode ser publicada no GitHub Pages.
 
 ## Como usar
 
 1. Abra `index.html` no navegador.
 2. Cadastre um perfil profissional.
 3. Publique factuais no feed.
-4. Use filtros por cidade, editoria, urgencia e status.
+4. Abra uma pauta para acompanhar detalhes, atualizações e colaboração.
+5. Use filtros por cidade, editoria, urgência e status.
+
+## O que já tem
+
+- Interface com cara de aplicativo
+- Recorte apenas para Mato Grosso do Sul
+- Cadastro e perfil profissional local
+- Feed de factuais e sugestões de pauta
+- Tela de detalhe da pauta
+- Publicação rápida de factual
+- Atualizações dentro de cada pauta
+- Botões de colaboração
+- Status jornalísticos: pista, em checagem, confirmado, em cobertura, publicado e descartado
+- Filtros por cidade, editoria, urgência e status
+- Busca por texto
+- Dados salvos no navegador com localStorage
+- Layout responsivo para celular e computador
 
 ## Como publicar no GitHub Pages
 
-1. Envie estes arquivos para a raiz do repositorio:
+1. Envie estes arquivos para a raiz do repositório:
    - `index.html`
    - `styles.css`
    - `app.js`
@@ -26,33 +43,18 @@ Esta versao e estatica: nao precisa instalar nada e pode ser publicada no GitHub
    - Pasta: `/root`
 5. Clique em `Save`.
 
-Depois de alguns minutos, o GitHub vai mostrar o link publico.
+## Limitações desta versão
 
-## O que ja tem
-
-- Interface com cara de aplicativo
-- Recorte apenas para Mato Grosso do Sul
-- Cadastro e perfil profissional local
-- Feed de factuais e sugestoes de pauta
-- Publicacao assinada pelo perfil cadastrado
-- Filtros por cidade, editoria, urgencia e status
-- Busca por texto
-- Botoes de colaboracao
-- Dados salvos no navegador com localStorage
-- Layout responsivo para celular e computador
-
-## Limitacoes desta versao
-
-Os dados ficam salvos apenas no navegador de quem esta usando. Para virar uma plataforma real, sera necessario adicionar:
+Os dados ficam salvos apenas no navegador de quem está usando. Para virar uma plataforma real, será necessário adicionar:
 
 - Login real
 - Banco de dados
-- Perfis publicos
-- Moderacao
-- Historico de edicoes
-- Publicacao em tempo real
-- Regras de checagem e seguranca
+- Perfis públicos
+- Moderação
+- Histórico de edições
+- Publicação em tempo real
+- Regras de checagem e segurança
 
-## Proximo passo sugerido
+## Próximo passo sugerido
 
-A proxima versao pode usar Supabase para login, banco de dados e feed compartilhado entre jornalistas.
+A próxima versão pode usar Supabase para login, banco de dados e feed compartilhado entre jornalistas.

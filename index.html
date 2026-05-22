@@ -18,7 +18,7 @@
   </head>
   <body>
     <div class="app-shell">
-      <aside class="sidebar" aria-label="Navegacao principal">
+      <aside class="sidebar" aria-label="Navegação principal">
         <div class="brand">
           <div class="brand-mark">MS</div>
           <div>
@@ -28,9 +28,18 @@
         </div>
 
         <nav class="nav-list">
-          <button class="nav-item active" type="button" data-view="feed">Feed</button>
-          <button class="nav-item" type="button" data-view="compose">Publicar</button>
-          <button class="nav-item" type="button" data-view="profile">Perfil</button>
+          <button class="nav-item active" type="button" data-view="feed">
+            <i data-lucide="radio"></i>
+            <span>Feed</span>
+          </button>
+          <button class="nav-item" type="button" data-view="compose">
+            <i data-lucide="square-pen"></i>
+            <span>Publicar</span>
+          </button>
+          <button class="nav-item" type="button" data-view="profile">
+            <i data-lucide="user-round"></i>
+            <span>Perfil</span>
+          </button>
         </nav>
 
         <div class="sidebar-note">
@@ -42,17 +51,25 @@
       <main class="main-app">
         <header class="topbar">
           <div>
-            <p class="eyebrow">Plantao colaborativo de MS</p>
-            <h1>O que esta acontecendo agora?</h1>
+            <p class="eyebrow">Plantão colaborativo de MS</p>
+            <h1>O que está acontecendo agora?</h1>
           </div>
-          <div class="user-chip" id="user-chip">
+          <button class="user-chip" id="user-chip" type="button" data-view="profile">
             <span class="avatar">?</span>
             <div>
               <strong>Visitante</strong>
               <small>Complete seu cadastro</small>
             </div>
-          </div>
+          </button>
         </header>
+
+        <section class="onboarding-banner" id="onboarding-banner">
+          <div>
+            <strong>Crie seu perfil profissional para publicar factuais.</strong>
+            <span>O Radar MS funciona como uma rede de colaboração entre jornalistas, com foco em pistas, checagem e cobertura local.</span>
+          </div>
+          <button class="button primary" type="button" data-view="profile">Cadastrar perfil</button>
+        </section>
 
         <section class="stats-row" aria-label="Resumo do radar">
           <article>
@@ -65,7 +82,7 @@
           </article>
           <article>
             <strong id="checking-count">0</strong>
-            <span>em apuracao</span>
+            <span>em checagem</span>
           </article>
           <article>
             <strong id="member-count">0</strong>
@@ -75,7 +92,10 @@
 
         <section class="view active" id="view-feed">
           <div class="toolbar">
-            <input id="search" type="search" placeholder="Buscar factual, cidade, fonte ou tag" />
+            <label class="search-field">
+              <i data-lucide="search"></i>
+              <input id="search" type="search" placeholder="Buscar factual, cidade, fonte ou tag" />
+            </label>
             <select id="filter-city">
               <option value="">Todas as cidades</option>
             </select>
@@ -83,36 +103,47 @@
               <option value="">Todas as editorias</option>
             </select>
             <select id="filter-urgency">
-              <option value="">Urgencia</option>
+              <option value="">Urgência</option>
               <option>Alta</option>
-              <option>Media</option>
+              <option>Média</option>
               <option>Baixa</option>
             </select>
             <select id="filter-status">
               <option value="">Status</option>
               <option>Pista</option>
-              <option>Em apuracao</option>
+              <option>Em checagem</option>
               <option>Confirmado</option>
+              <option>Em cobertura</option>
               <option>Publicado</option>
+              <option>Descartado</option>
             </select>
           </div>
 
           <div class="feed-layout">
-            <div class="feed-list" id="feed-list" aria-live="polite"></div>
+            <div>
+              <div class="quick-composer">
+                <button class="quick-composer-main" type="button" data-view="compose">
+                  <span class="avatar small" id="quick-avatar">?</span>
+                  <span>Compartilhar factual, pista ou atualização...</span>
+                </button>
+              </div>
+              <div class="feed-list" id="feed-list" aria-live="polite"></div>
+            </div>
 
             <aside class="right-panel">
               <section class="panel-block">
-                <h2>Como usar</h2>
+                <h2>Plantão MS</h2>
                 <p>
-                  Poste sinais de factual, informe o que ainda precisa ser checado e colabore com colegas que estejam apurando.
+                  Publique sinais de factual, informe o que ainda precisa ser checado e colabore com colegas em cobertura.
                 </p>
               </section>
               <section class="panel-block">
-                <h2>Cuidados</h2>
+                <h2>Boas práticas</h2>
                 <ul>
-                  <li>Identifique boatos como pista.</li>
-                  <li>Evite dados pessoais sensiveis.</li>
+                  <li>Marque boatos como pista.</li>
+                  <li>Evite dados pessoais sensíveis.</li>
                   <li>Informe a fonte inicial quando houver.</li>
+                  <li>Atualize o status quando confirmar ou descartar.</li>
                 </ul>
               </section>
             </aside>
@@ -122,82 +153,100 @@
         <section class="view" id="view-compose">
           <div class="compose-card">
             <div class="section-heading">
-              <p class="eyebrow">Nova publicacao</p>
-              <h2>Compartilhar factual ou sugestao de pauta</h2>
+              <p class="eyebrow">Nova publicação</p>
+              <h2>Compartilhar factual ou sugestão de pauta</h2>
             </div>
 
             <form class="compose-form" id="pitch-form">
               <label>
-                Titulo
-                <input id="title" name="title" type="text" placeholder="Ex: Bombeiros atendem ocorrencia no centro" required />
-              </label>
-
-              <label>
-                O que esta acontecendo?
+                O que está acontecendo?
                 <textarea
                   id="description"
                   name="description"
                   rows="5"
-                  placeholder="Explique o factual, o que ja se sabe, o que precisa ser confirmado e possiveis caminhos de apuracao."
+                  placeholder="Ex: Bombeiros atendem ocorrência no centro. Há fumaça visível e bloqueio parcial na avenida."
                   required
                 ></textarea>
               </label>
 
-              <div class="form-grid">
+              <div class="form-grid fast">
                 <label>
                   Cidade de MS
                   <select id="city" name="city" required></select>
                 </label>
                 <label>
-                  Editoria
-                  <select id="category" name="category" required>
-                    <option>Cidades</option>
-                    <option>Politica</option>
-                    <option>Policia</option>
-                    <option>Saude</option>
-                    <option>Educacao</option>
-                    <option>Economia</option>
-                    <option>Clima</option>
-                    <option>Cultura</option>
-                    <option>Esportes</option>
-                    <option>Agro</option>
-                  </select>
-                </label>
-                <label>
-                  Urgencia
+                  Urgência
                   <select id="urgency" name="urgency" required>
                     <option>Alta</option>
-                    <option>Media</option>
+                    <option>Média</option>
                     <option>Baixa</option>
                   </select>
                 </label>
                 <label>
-                  Status
-                  <select id="status" name="status" required>
-                    <option>Pista</option>
-                    <option>Em apuracao</option>
-                    <option>Confirmado</option>
-                    <option>Publicado</option>
-                  </select>
+                  Fonte inicial
+                  <input id="source" name="source" type="text" placeholder="morador, assessoria, boletim, fonte reservada" />
                 </label>
               </div>
 
-              <div class="form-grid two">
-                <label>
-                  Fonte inicial
-                  <input id="source" name="source" type="text" placeholder="Ex: morador, assessoria, boletim, fonte reservada" />
-                </label>
-                <label>
-                  Tags
-                  <input id="tags" name="tags" type="text" placeholder="transito, prefeitura, chuva" />
-                </label>
-              </div>
+              <details class="advanced-fields">
+                <summary>Adicionar detalhes da pauta</summary>
+                <div class="advanced-grid">
+                  <label>
+                    Título
+                    <input id="title" name="title" type="text" placeholder="Título curto para o feed" />
+                  </label>
+                  <label>
+                    Editoria
+                    <select id="category" name="category" required>
+                      <option>Cidades</option>
+                      <option>Política</option>
+                      <option>Polícia</option>
+                      <option>Saúde</option>
+                      <option>Educação</option>
+                      <option>Economia</option>
+                      <option>Clima</option>
+                      <option>Cultura</option>
+                      <option>Esportes</option>
+                      <option>Agro</option>
+                    </select>
+                  </label>
+                  <label>
+                    Status
+                    <select id="status" name="status" required>
+                      <option>Pista</option>
+                      <option>Em checagem</option>
+                      <option>Confirmado</option>
+                      <option>Em cobertura</option>
+                      <option>Publicado</option>
+                      <option>Descartado</option>
+                    </select>
+                  </label>
+                  <label>
+                    Tags
+                    <input id="tags" name="tags" type="text" placeholder="trânsito, prefeitura, chuva" />
+                  </label>
+                </div>
+              </details>
 
               <div class="form-footer">
-                <p>O autor sera o perfil cadastrado neste navegador.</p>
-                <button class="button primary" type="submit">Publicar no radar</button>
+                <p>O autor será o perfil cadastrado neste navegador.</p>
+                <button class="button primary" type="submit">
+                  <i data-lucide="send"></i>
+                  <span>Publicar no radar</span>
+                </button>
               </div>
             </form>
+          </div>
+        </section>
+
+        <section class="view" id="view-detail">
+          <button class="back-button" type="button" data-view="feed">
+            <i data-lucide="arrow-left"></i>
+            <span>Voltar ao feed</span>
+          </button>
+          <div class="detail-layout">
+            <article class="detail-card" id="detail-card"></article>
+            <aside class="detail-side" id="detail-side"></aside>
           </div>
         </section>
 
@@ -214,16 +263,22 @@
                 <input id="profile-name" name="name" type="text" placeholder="Seu nome" required />
               </label>
               <label>
-                Redacao ou atuacao
-                <input id="profile-organization" name="organization" type="text" placeholder="Ex: freelancer, TV, radio, jornal, portal" required />
+                Redação ou atuação
+                <input id="profile-organization" name="organization" type="text" placeholder="Ex: freelancer, TV, rádio, jornal, portal" required />
               </label>
-              <label>
-                Cidade base
-                <select id="profile-city" name="city" required></select>
-              </label>
+              <div class="form-grid two">
+                <label>
+                  Cidade base
+                  <select id="profile-city" name="city" required></select>
+                </label>
+                <label>
+                  Função
+                  <input id="profile-role" name="role" type="text" placeholder="repórter, produtor, editor" />
+                </label>
+              </div>
               <label>
                 Editorias que acompanha
-                <input id="profile-beats" name="beats" type="text" placeholder="politica, cidades, policia" />
+                <input id="profile-beats" name="beats" type="text" placeholder="política, cidades, polícia" />
               </label>
               <label>
                 Contato profissional
@@ -235,7 +290,7 @@
 
             <aside class="profile-preview" id="profile-preview">
               <span class="avatar large">?</span>
-              <h2>Perfil ainda nao cadastrado</h2>
+              <h2>Perfil ainda não cadastrado</h2>
               <p>Cadastre seu perfil para publicar factuais com assinatura profissional.</p>
             </aside>
           </div>
@@ -243,12 +298,22 @@
       </main>
     </div>
 
-    <nav class="mobile-nav" aria-label="Navegacao mobile">
-      <button class="nav-item active" type="button" data-view="feed">Feed</button>
-      <button class="nav-item" type="button" data-view="compose">Publicar</button>
-      <button class="nav-item" type="button" data-view="profile">Perfil</button>
+    <nav class="mobile-nav" aria-label="Navegação mobile">
+      <button class="nav-item active" type="button" data-view="feed">
+        <i data-lucide="radio"></i>
+        <span>Feed</span>
+      </button>
+      <button class="nav-item" type="button" data-view="compose">
+        <i data-lucide="square-pen"></i>
+        <span>Publicar</span>
+      </button>
+      <button class="nav-item" type="button" data-view="profile">
+        <i data-lucide="user-round"></i>
+        <span>Perfil</span>
+      </button>
     </nav>
 
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
     <script src="app.js"></script>
   </body>
 </html>
