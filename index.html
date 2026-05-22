@@ -3,10 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Radar de Pautas</title>
+    <title>Radar MS</title>
     <meta
       name="description"
-      content="Plataforma colaborativa para jornalistas compartilharem factuais, sugestões de pauta e alertas de apuração."
+      content="Rede colaborativa de factuais e pautas para jornalistas de Mato Grosso do Sul."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -17,183 +17,238 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <header class="topbar">
-      <div class="brand">
-        <div class="brand-mark">RP</div>
-        <div>
-          <strong>Radar de Pautas</strong>
-          <span>Rede colaborativa para factuais</span>
-        </div>
-      </div>
-      <nav class="top-actions" aria-label="Acoes principais">
-        <a href="#feed">Feed</a>
-        <a href="#nova-pauta">Nova pauta</a>
-      </nav>
-    </header>
-
-    <main>
-      <section class="hero">
-        <div class="hero-copy">
-          <p class="eyebrow">Para jornalistas, redações e freelancers</p>
-          <h1>Compartilhe o que está acontecendo antes que vire silêncio.</h1>
-          <p>
-            Publique factuais, pistas de apuração, alertas locais e sugestões de pauta em um ambiente feito para colaboração profissional.
-          </p>
-          <div class="hero-actions">
-            <a class="button primary" href="#nova-pauta">Publicar pauta</a>
-            <a class="button secondary" href="#feed">Ver feed</a>
-          </div>
-        </div>
-        <aside class="signal-panel" aria-label="Resumo do plantao">
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Navegacao principal">
+        <div class="brand">
+          <div class="brand-mark">MS</div>
           <div>
-            <span class="panel-number" id="total-count">0</span>
-            <span class="panel-label">pautas no radar</span>
+            <strong>Radar MS</strong>
+            <span>Factuais para jornalistas</span>
           </div>
+        </div>
+
+        <nav class="nav-list">
+          <button class="nav-item active" type="button" data-view="feed">Feed</button>
+          <button class="nav-item" type="button" data-view="compose">Publicar</button>
+          <button class="nav-item" type="button" data-view="profile">Perfil</button>
+        </nav>
+
+        <div class="sidebar-note">
+          <strong>Rede estadual</strong>
+          <span>Por enquanto, apenas Mato Grosso do Sul.</span>
+        </div>
+      </aside>
+
+      <main class="main-app">
+        <header class="topbar">
           <div>
-            <span class="panel-number danger" id="urgent-count">0</span>
-            <span class="panel-label">urgentes</span>
+            <p class="eyebrow">Plantao colaborativo de MS</p>
+            <h1>O que esta acontecendo agora?</h1>
           </div>
-          <div>
-            <span class="panel-number" id="checking-count">0</span>
-            <span class="panel-label">em apuração</span>
+          <div class="user-chip" id="user-chip">
+            <span class="avatar">?</span>
+            <div>
+              <strong>Visitante</strong>
+              <small>Complete seu cadastro</small>
+            </div>
           </div>
-        </aside>
-      </section>
+        </header>
 
-      <section class="compose-section" id="nova-pauta">
-        <div class="section-heading">
-          <p class="eyebrow">Nova contribuição</p>
-          <h2>Registrar pauta ou factual</h2>
-        </div>
+        <section class="stats-row" aria-label="Resumo do radar">
+          <article>
+            <strong id="total-count">0</strong>
+            <span>factuais no radar</span>
+          </article>
+          <article>
+            <strong id="urgent-count">0</strong>
+            <span>urgentes</span>
+          </article>
+          <article>
+            <strong id="checking-count">0</strong>
+            <span>em apuracao</span>
+          </article>
+          <article>
+            <strong id="member-count">0</strong>
+            <span>jornalistas ativos</span>
+          </article>
+        </section>
 
-        <form class="compose-form" id="pitch-form">
-          <label>
-            Título
-            <input id="title" name="title" type="text" placeholder="Ex: Queda de energia afeta hospital municipal" required />
-          </label>
-
-          <label>
-            Descrição
-            <textarea
-              id="description"
-              name="description"
-              rows="4"
-              placeholder="Descreva o que está acontecendo, o que precisa ser confirmado e qualquer contexto importante."
-              required
-            ></textarea>
-          </label>
-
-          <div class="form-grid">
-            <label>
-              Cidade
-              <input id="city" name="city" type="text" placeholder="Cuiabá" required />
-            </label>
-            <label>
-              Estado
-              <select id="state" name="state" required>
-                <option value="">Selecione</option>
-                <option>AC</option><option>AL</option><option>AP</option><option>AM</option><option>BA</option>
-                <option>CE</option><option>DF</option><option>ES</option><option>GO</option><option>MA</option>
-                <option>MT</option><option>MS</option><option>MG</option><option>PA</option><option>PB</option>
-                <option>PR</option><option>PE</option><option>PI</option><option>RJ</option><option>RN</option>
-                <option>RS</option><option>RO</option><option>RR</option><option>SC</option><option>SP</option>
-                <option>SE</option><option>TO</option>
-              </select>
-            </label>
-            <label>
-              Categoria
-              <select id="category" name="category" required>
-                <option>Cidades</option>
-                <option>Política</option>
-                <option>Polícia</option>
-                <option>Saúde</option>
-                <option>Educação</option>
-                <option>Economia</option>
-                <option>Clima</option>
-                <option>Cultura</option>
-                <option>Esportes</option>
-              </select>
-            </label>
-            <label>
-              Urgência
-              <select id="urgency" name="urgency" required>
-                <option>Alta</option>
-                <option>Média</option>
-                <option>Baixa</option>
-              </select>
-            </label>
+        <section class="view active" id="view-feed">
+          <div class="toolbar">
+            <input id="search" type="search" placeholder="Buscar factual, cidade, fonte ou tag" />
+            <select id="filter-city">
+              <option value="">Todas as cidades</option>
+            </select>
+            <select id="filter-category">
+              <option value="">Todas as editorias</option>
+            </select>
+            <select id="filter-urgency">
+              <option value="">Urgencia</option>
+              <option>Alta</option>
+              <option>Media</option>
+              <option>Baixa</option>
+            </select>
+            <select id="filter-status">
+              <option value="">Status</option>
+              <option>Pista</option>
+              <option>Em apuracao</option>
+              <option>Confirmado</option>
+              <option>Publicado</option>
+            </select>
           </div>
 
-          <div class="form-grid">
-            <label>
-              Status
-              <select id="status" name="status" required>
-                <option>Sugestão</option>
-                <option>Em apuração</option>
-                <option>Confirmada</option>
-                <option>Publicada</option>
-              </select>
-            </label>
-            <label>
-              Fonte inicial
-              <input id="source" name="source" type="text" placeholder="Ex: morador, assessoria, órgão público" />
-            </label>
-            <label>
-              Seu nome
-              <input id="author" name="author" type="text" placeholder="Nome profissional" required />
-            </label>
-            <label>
-              Tags
-              <input id="tags" name="tags" type="text" placeholder="trânsito, prefeitura, chuva" />
-            </label>
+          <div class="feed-layout">
+            <div class="feed-list" id="feed-list" aria-live="polite"></div>
+
+            <aside class="right-panel">
+              <section class="panel-block">
+                <h2>Como usar</h2>
+                <p>
+                  Poste sinais de factual, informe o que ainda precisa ser checado e colabore com colegas que estejam apurando.
+                </p>
+              </section>
+              <section class="panel-block">
+                <h2>Cuidados</h2>
+                <ul>
+                  <li>Identifique boatos como pista.</li>
+                  <li>Evite dados pessoais sensiveis.</li>
+                  <li>Informe a fonte inicial quando houver.</li>
+                </ul>
+              </section>
+            </aside>
           </div>
+        </section>
 
-          <div class="form-footer">
-            <p>Marque informações ainda não confirmadas como pista de apuração.</p>
-            <button class="button primary" type="submit">Adicionar ao feed</button>
+        <section class="view" id="view-compose">
+          <div class="compose-card">
+            <div class="section-heading">
+              <p class="eyebrow">Nova publicacao</p>
+              <h2>Compartilhar factual ou sugestao de pauta</h2>
+            </div>
+
+            <form class="compose-form" id="pitch-form">
+              <label>
+                Titulo
+                <input id="title" name="title" type="text" placeholder="Ex: Bombeiros atendem ocorrencia no centro" required />
+              </label>
+
+              <label>
+                O que esta acontecendo?
+                <textarea
+                  id="description"
+                  name="description"
+                  rows="5"
+                  placeholder="Explique o factual, o que ja se sabe, o que precisa ser confirmado e possiveis caminhos de apuracao."
+                  required
+                ></textarea>
+              </label>
+
+              <div class="form-grid">
+                <label>
+                  Cidade de MS
+                  <select id="city" name="city" required></select>
+                </label>
+                <label>
+                  Editoria
+                  <select id="category" name="category" required>
+                    <option>Cidades</option>
+                    <option>Politica</option>
+                    <option>Policia</option>
+                    <option>Saude</option>
+                    <option>Educacao</option>
+                    <option>Economia</option>
+                    <option>Clima</option>
+                    <option>Cultura</option>
+                    <option>Esportes</option>
+                    <option>Agro</option>
+                  </select>
+                </label>
+                <label>
+                  Urgencia
+                  <select id="urgency" name="urgency" required>
+                    <option>Alta</option>
+                    <option>Media</option>
+                    <option>Baixa</option>
+                  </select>
+                </label>
+                <label>
+                  Status
+                  <select id="status" name="status" required>
+                    <option>Pista</option>
+                    <option>Em apuracao</option>
+                    <option>Confirmado</option>
+                    <option>Publicado</option>
+                  </select>
+                </label>
+              </div>
+
+              <div class="form-grid two">
+                <label>
+                  Fonte inicial
+                  <input id="source" name="source" type="text" placeholder="Ex: morador, assessoria, boletim, fonte reservada" />
+                </label>
+                <label>
+                  Tags
+                  <input id="tags" name="tags" type="text" placeholder="transito, prefeitura, chuva" />
+                </label>
+              </div>
+
+              <div class="form-footer">
+                <p>O autor sera o perfil cadastrado neste navegador.</p>
+                <button class="button primary" type="submit">Publicar no radar</button>
+              </div>
+            </form>
           </div>
-        </form>
-      </section>
+        </section>
 
-      <section class="feed-section" id="feed">
-        <div class="section-heading">
-          <p class="eyebrow">Plantão colaborativo</p>
-          <h2>Feed de pautas</h2>
-        </div>
+        <section class="view" id="view-profile">
+          <div class="profile-grid">
+            <form class="profile-card" id="profile-form">
+              <div class="section-heading">
+                <p class="eyebrow">Cadastro profissional</p>
+                <h2>Seu perfil</h2>
+              </div>
 
-        <div class="filters" aria-label="Filtros do feed">
-          <input id="search" type="search" placeholder="Buscar por título, cidade, tag ou fonte" />
-          <select id="filter-category">
-            <option value="">Todas as categorias</option>
-          </select>
-          <select id="filter-urgency">
-            <option value="">Todas as urgências</option>
-            <option>Alta</option>
-            <option>Média</option>
-            <option>Baixa</option>
-          </select>
-          <select id="filter-status">
-            <option value="">Todos os status</option>
-            <option>Sugestão</option>
-            <option>Em apuração</option>
-            <option>Confirmada</option>
-            <option>Publicada</option>
-          </select>
-          <select id="filter-state">
-            <option value="">Todos os estados</option>
-          </select>
-        </div>
+              <label>
+                Nome profissional
+                <input id="profile-name" name="name" type="text" placeholder="Seu nome" required />
+              </label>
+              <label>
+                Redacao ou atuacao
+                <input id="profile-organization" name="organization" type="text" placeholder="Ex: freelancer, TV, radio, jornal, portal" required />
+              </label>
+              <label>
+                Cidade base
+                <select id="profile-city" name="city" required></select>
+              </label>
+              <label>
+                Editorias que acompanha
+                <input id="profile-beats" name="beats" type="text" placeholder="politica, cidades, policia" />
+              </label>
+              <label>
+                Contato profissional
+                <input id="profile-contact" name="contact" type="text" placeholder="email, telefone ou rede profissional" />
+              </label>
 
-        <div class="feed-list" id="feed-list" aria-live="polite"></div>
-      </section>
-    </main>
+              <button class="button primary" type="submit">Salvar perfil</button>
+            </form>
 
-    <footer class="site-footer">
-      <strong>Radar de Pautas</strong>
-      <span>Protótipo aberto para colaboração jornalística.</span>
-    </footer>
+            <aside class="profile-preview" id="profile-preview">
+              <span class="avatar large">?</span>
+              <h2>Perfil ainda nao cadastrado</h2>
+              <p>Cadastre seu perfil para publicar factuais com assinatura profissional.</p>
+            </aside>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <nav class="mobile-nav" aria-label="Navegacao mobile">
+      <button class="nav-item active" type="button" data-view="feed">Feed</button>
+      <button class="nav-item" type="button" data-view="compose">Publicar</button>
+      <button class="nav-item" type="button" data-view="profile">Perfil</button>
+    </nav>
 
     <script src="app.js"></script>
   </body>
 </html>
-
