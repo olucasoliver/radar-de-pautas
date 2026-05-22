@@ -51,16 +51,22 @@
       <main class="main-app">
         <header class="topbar">
           <div>
-            <p class="eyebrow">Plantão colaborativo de MS</p>
+            <p class="eyebrow"><span class="live-dot"></span> Plantão colaborativo de MS</p>
             <h1>O que está acontecendo agora?</h1>
           </div>
-          <button class="user-chip" id="user-chip" type="button" data-view="profile">
-            <span class="avatar">?</span>
-            <div>
-              <strong>Visitante</strong>
-              <small>Complete seu cadastro</small>
-            </div>
-          </button>
+          <div class="topbar-actions">
+            <button class="button secondary" type="button" data-view="compose">
+              <i data-lucide="plus"></i>
+              <span>Novo factual</span>
+            </button>
+            <button class="user-chip" id="user-chip" type="button" data-view="profile">
+              <span class="avatar">?</span>
+              <div>
+                <strong>Visitante</strong>
+                <small>Complete seu cadastro</small>
+              </div>
+            </button>
+          </div>
         </header>
 
         <section class="onboarding-banner" id="onboarding-banner">
@@ -91,6 +97,13 @@
         </section>
 
         <section class="view active" id="view-feed">
+          <div class="feed-tabs" aria-label="Atalhos do feed">
+            <button class="feed-tab active" type="button" data-filter-status="">Todos</button>
+            <button class="feed-tab" type="button" data-filter-urgency="Alta">Urgentes</button>
+            <button class="feed-tab" type="button" data-filter-status="Em checagem">Em checagem</button>
+            <button class="feed-tab" type="button" data-filter-status="Confirmado">Confirmados</button>
+          </div>
+
           <div class="toolbar">
             <label class="search-field">
               <i data-lucide="search"></i>

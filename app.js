@@ -112,6 +112,7 @@ const state = {
 
 const navItems = document.querySelectorAll(".nav-item");
 const viewButtons = document.querySelectorAll("[data-view]");
+const feedTabs = document.querySelectorAll(".feed-tab");
 const views = document.querySelectorAll(".view");
 const form = document.querySelector("#pitch-form");
 const profileForm = document.querySelector("#profile-form");
@@ -586,14 +587,36 @@ searchInput.addEventListener("input", (event) => {
   select.addEventListener("change", (event) => {
     const key = event.target.id.replace("filter-", "");
     state.filters[key] = event.target.value;
+    syncFeedTabs();
     renderFeed();
   });
 });
+
+feedTabs.forEach((tab) => {
+  tab.addEventListener("click", () => {
+    state.filters.urgency = tab.dataset.filterUrgency || "";
+    state.filters.status = tab.dataset.filterStatus || "";
+    urgencyFilter.value = state.filters.urgency;
+    statusFilter.value = state.filters.status;
+    syncFeedTabs();
+    renderFeed();
+  });
+});
+
+function syncFeedTabs() {
+  feedTabs.forEach((tab) => {
+    const tabUrgency = tab.dataset.filterUrgency || "";
+    const tabStatus = tab.dataset.filterStatus || "";
+    const isActive = state.filters.urgency === tabUrgency && state.filters.status === tabStatus;
+    tab.classList.toggle("active", isActive);
+  });
+}
 
 fillCityOptions(citySelect, false);
 fillCityOptions(profileCitySelect, false);
 fillCityOptions(cityFilter, true);
 fillFilterOptions();
+syncFeedTabs();
 renderProfile();
 renderFeed();
 
