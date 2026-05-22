@@ -93,6 +93,14 @@ svg {
   width: 42px;
 }
 
+.avatar img,
+.mini-avatar img {
+  border-radius: inherit;
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
 .avatar.small {
   height: 34px;
   width: 34px;
@@ -531,6 +539,12 @@ textarea:focus {
   height: 28px;
   place-items: center;
   width: 28px;
+}
+
+input[type="file"] {
+  align-items: center;
+  cursor: pointer;
+  padding: 9px 12px;
 }
 
 .pill {

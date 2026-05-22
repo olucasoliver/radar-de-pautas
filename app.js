@@ -116,6 +116,7 @@ const feedTabs = document.querySelectorAll(".feed-tab");
 const views = document.querySelectorAll(".view");
 const form = document.querySelector("#pitch-form");
 const profileForm = document.querySelector("#profile-form");
+const profilePhotoInput = document.querySelector("#profile-photo");
 const feedList = document.querySelector("#feed-list");
 const detailCard = document.querySelector("#detail-card");
 const detailSide = document.querySelector("#detail-side");
@@ -126,6 +127,7 @@ const urgencyFilter = document.querySelector("#filter-urgency");
 const statusFilter = document.querySelector("#filter-status");
 const citySelect = document.querySelector("#city");
 const profileCitySelect = document.querySelector("#profile-city");
+let pendingProfilePhoto = null;
 
 function loadPitches() {
   const saved = localStorage.getItem(pitchStorageKey);
@@ -143,6 +145,7 @@ function normalizePitch(pitch) {
   return {
     followers: 0,
     role: "",
+    authorPhoto: "",
     updatedAt: pitch.createdAt || "Agora",
     updates: [],
     ...pitch,
@@ -188,6 +191,28 @@ function initials(name) {
   const parts = String(name || "?").trim().split(/\s+/).filter(Boolean);
   if (!parts.length) return "?";
   return parts.slice(0, 2).map((part) => part[0]).join("").toUpperCase();
+}
+
+function avatarMarkup(name, photo, className = "avatar") {
+  if (photo) {
+    return `<span class="${className}"><img src="${escapeHtml(photo)}" alt=""></span>`;
+  }
+
+  return `<span class="${className}">${escapeHtml(initials(name))}</span>`;
+}
+
+function setAvatarElement(element, name, photo) {
+  element.innerHTML = "";
+
+  if (photo) {
+    const image = document.createElement("img");
+    image.src = photo;
+    image.alt = "";
+    element.appendChild(image);
+    return;
+  }
+
+  element.textContent = initials(name);
 }
 
 function uniqueSorted(items) {
@@ -259,16 +284,16 @@ function renderProfile() {
         <small>Complete seu cadastro</small>
       </div>
     `;
-    quickAvatar.textContent = "?";
+    setAvatarElement(quickAvatar, "?", "");
     banner.classList.remove("is-hidden");
     return;
   }
 
   const userInitials = initials(state.profile.name);
-  quickAvatar.textContent = userInitials;
+  setAvatarElement(quickAvatar, state.profile.name, state.profile.photo);
   banner.classList.add("is-hidden");
   chip.innerHTML = `
-    <span class="avatar">${escapeHtml(userInitials)}</span>
+    ${avatarMarkup(state.profile.name, state.profile.photo)}
     <div>
       <strong>${escapeHtml(state.profile.name)}</strong>
       <small>${escapeHtml(state.profile.city)} - ${escapeHtml(state.profile.organization)}</small>
@@ -276,7 +301,7 @@ function renderProfile() {
   `;
 
   preview.innerHTML = `
-    <span class="avatar large">${escapeHtml(userInitials)}</span>
+    ${avatarMarkup(state.profile.name, state.profile.photo, "avatar large")}
     <h2>${escapeHtml(state.profile.name)}</h2>
     <p>${escapeHtml(state.profile.role || "Jornalista")} em ${escapeHtml(state.profile.organization)} - ${escapeHtml(state.profile.city)}</p>
     <div class="tag-row">
@@ -316,7 +341,7 @@ function renderFeed() {
       <header>
         <div>
           <div class="author-row">
-            <span class="mini-avatar">${escapeHtml(initials(pitch.author))}</span>
+            ${avatarMarkup(pitch.author, pitch.authorPhoto, "mini-avatar")}
             <span>${escapeHtml(pitch.author)} - ${escapeHtml(pitch.organization || "Jornalista")}</span>
           </div>
           <h3>${escapeHtml(pitch.title)}</h3>
@@ -360,7 +385,7 @@ function renderDetail() {
     <div class="detail-header">
       <div>
         <div class="author-row">
-          <span class="mini-avatar">${escapeHtml(initials(pitch.author))}</span>
+          ${avatarMarkup(pitch.author, pitch.authorPhoto, "mini-avatar")}
           <span>${escapeHtml(pitch.author)} - ${escapeHtml(pitch.organization || "Jornalista")}</span>
         </div>
         <h2>${escapeHtml(pitch.title)}</h2>
@@ -459,6 +484,7 @@ function createPitch(formData) {
     author: state.profile?.name || "Jornalista sem cadastro",
     organization: state.profile?.organization || "Perfil incompleto",
     role: state.profile?.role || "",
+    authorPhoto: state.profile?.photo || "",
     tags,
     helps: 0,
     checking: 0,
@@ -529,12 +555,29 @@ profileForm.addEventListener("submit", (event) => {
     role: formData.get("role").trim(),
     beats: formData.get("beats").trim(),
     contact: formData.get("contact").trim(),
+    photo: pendingProfilePhoto || state.profile?.photo || "",
   };
+  pendingProfilePhoto = null;
   saveProfile();
   renderProfile();
   renderStats();
   citySelect.value = state.profile.city;
   switchView("feed");
+});
+
+profilePhotoInput.addEventListener("change", () => {
+  const file = profilePhotoInput.files?.[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.addEventListener("load", () => {
+    pendingProfilePhoto = String(reader.result || "");
+    const preview = document.querySelector("#profile-preview .avatar");
+    if (preview) {
+      setAvatarElement(preview, document.querySelector("#profile-name").value || "Perfil", pendingProfilePhoto);
+    }
+  });
+  reader.readAsDataURL(file);
 });
 
 document.addEventListener("click", (event) => {
