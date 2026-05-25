@@ -1,60 +1,102 @@
-# Radar MS
+# Radar MS - Rede Colaborativa de Jornalistas
 
-Protótipo de uma rede social profissional para jornalistas de Mato Grosso do Sul compartilharem factuais, pistas de apuração e sugestões de pauta.
+Rede social profissional para jornalistas de Mato Grosso do Sul compartilharem factuais, pistas e pautas em tempo real.
 
-Esta versão é estática: não precisa instalar nada e pode ser publicada no GitHub Pages.
+## 🚀 Melhorias Implementadas (v2.0)
 
-## Como usar
+### UX/UI
+- ✅ **Sistema de Notificações Toast** - Feedback visual para todas as ações
+- ✅ **Loading Overlay** - Indicador de processamento durante operações
+- ✅ **Dark Mode** - Tema escuro com persistência no localStorage
+- ✅ **Validação de Formulários** - Validação em tempo real com mensagens de erro
+- ✅ **Contador de Caracteres** - Limite visual para descrições
+- ✅ **Paginação** - Carregamento progressivo do feed ("Carregar mais")
+- ✅ **Exportação de Dados** - Backup completo em JSON
 
-1. Abra `index.html` no navegador.
-2. Cadastre um perfil profissional.
-3. Publique factuais no feed.
-4. Abra uma pauta para acompanhar detalhes, atualizações e colaboração.
-5. Use filtros por cidade, editoria, urgência e status.
+### Acessibilidade
+- ✅ Labels ARIA em todos os elementos interativos
+- ✅ Foco visível melhorado
+- ✅ Suporte a navegação por teclado
+- ✅ Leitores de tela compatíveis
 
-## O que já tem
+### Segurança
+- ✅ Sanitização extra contra XSS
+- ✅ Validação de inputs do lado do cliente
+- ✅ Escape HTML em toda exibição de dados
 
-- Interface com cara de aplicativo
-- Recorte apenas para Mato Grosso do Sul
-- Cadastro e perfil profissional local
-- Feed de factuais e sugestões de pauta
-- Tela de detalhe da pauta
-- Publicação rápida de factual
-- Atualizações dentro de cada pauta
-- Botões de colaboração
-- Status jornalísticos: pista, em checagem, confirmado, em cobertura, publicado e descartado
-- Filtros por cidade, editoria, urgência e status
-- Busca por texto
-- Dados salvos no navegador com localStorage
-- Layout responsivo para celular e computador
+### Performance
+- ✅ Renderização paginada do feed
+- ✅ Loading states para melhor percepção de performance
+- ✅ Código modularizado por funcionalidade
 
-## Como publicar no GitHub Pages
+## 📁 Estrutura
 
-1. Envie estes arquivos para a raiz do repositório:
-   - `index.html`
-   - `styles.css`
-   - `app.js`
-   - `README.md`
-2. No GitHub, entre em `Settings`.
-3. Clique em `Pages`.
-4. Em `Build and deployment`, escolha:
-   - `Source`: Deploy from a branch
-   - `Branch`: main
-   - Pasta: `/root`
-5. Clique em `Save`.
+```
+/workspace
+├── index.html      # Estrutura da aplicação
+├── styles.css      # Estilos + Dark Mode + Componentes
+├── app.js          # Lógica + Novas funcionalidades
+└── README.md       # Esta documentação
+```
 
-## Limitações desta versão
+## 🎯 Funcionalidades
 
-Os dados ficam salvos apenas no navegador de quem está usando. Para virar uma plataforma real, será necessário adicionar:
+### Principais
+- Feed de factuais com filtros múltiplos
+- Publicação de novas pautas
+- Perfis profissionais de jornalistas
+- Sistema de colaboração (acompanhar, apurar)
+- Busca full-text
+- Filtros por cidade, categoria, urgência e status
 
-- Login real
-- Banco de dados
-- Perfis públicos
-- Moderação
-- Histórico de edições
-- Publicação em tempo real
-- Regras de checagem e segurança
+### Novas (v2.0)
+- **Toast Notifications**: `Toast.success()`, `Toast.error()`, `Toast.warning()`, `Toast.info()`
+- **Dark Mode**: Toggle persistente no sidebar
+- **Validação**: Campos obrigatórios, minlength, maxlength
+- **Paginação**: 10 itens por página com "Carregar mais"
+- **Exportação**: Download de backup JSON
+- **Loading**: Overlay durante operações
 
-## Próximo passo sugerido
+## 🔧 Uso
 
-A próxima versão pode usar Supabase para login, banco de dados e feed compartilhado entre jornalistas.
+### Abrir a aplicação
+Basta abrir o arquivo `index.html` em qualquer navegador moderno.
+
+### Ativar Dark Mode
+Clique no botão "Dark Mode" no sidebar esquerdo.
+
+### Exportar dados
+Clique no botão "Exportar" na topbar para baixar um backup.
+
+### Publicar factual
+1. Complete seu perfil primeiro
+2. Clique em "Publicar" ou "Novo factual"
+3. Preencha os campos obrigatórios (mínimo 20 caracteres na descrição)
+4. Clique em "Publicar no radar"
+
+## 📊 Estatísticas
+
+| Arquivo | Linhas |
+|---------|--------|
+| index.html | 365 |
+| styles.css | 1074 |
+| app.js | 1063 |
+| **Total** | **2502** |
+
+## 🛠️ Próximos Passos Sugeridos
+
+1. **Backend Real**: Implementar API REST com Node.js/Express ou Python/FastAPI
+2. **Autenticação**: Login seguro com JWT ou OAuth
+3. **Upload de Mídia**: Integração com cloud storage (AWS S3, Cloudinary)
+4. **Tempo Real**: WebSockets para atualizações instantâneas
+5. **Geolocalização**: Mapa interativo de ocorrências
+6. **Moderação**: Sistema de report e aprovação de conteúdo
+7. **Analytics**: Dashboard de métricas e engajamento
+
+## 📝 Licença
+
+Projeto educacional/demonstrativo. Use como base para seus próprios projetos.
+
+---
+
+**Desenvolvido para jornalistas de Mato Grosso do Sul** 🇧🇷

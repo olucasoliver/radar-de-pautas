@@ -17,6 +17,15 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
+    <!-- Notificações Toast -->
+    <div id="toast-container" class="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay is-hidden">
+      <div class="loading-spinner"></div>
+      <p>Carregando...</p>
+    </div>
+
     <div class="app-shell">
       <aside class="sidebar" aria-label="Navegação principal">
         <div class="brand">
@@ -28,15 +37,15 @@
         </div>
 
         <nav class="nav-list">
-          <button class="nav-item active" type="button" data-view="feed">
+          <button class="nav-item active" type="button" data-view="feed" aria-label="Ir para feed">
             <i data-lucide="radio"></i>
             <span>Feed</span>
           </button>
-          <button class="nav-item" type="button" data-view="compose">
+          <button class="nav-item" type="button" data-view="compose" aria-label="Criar nova publicação">
             <i data-lucide="square-pen"></i>
             <span>Publicar</span>
           </button>
-          <button class="nav-item" type="button" data-view="profile">
+          <button class="nav-item" type="button" data-view="profile" aria-label="Ver perfil">
             <i data-lucide="user-round"></i>
             <span>Perfil</span>
           </button>
@@ -46,6 +55,11 @@
           <strong>Rede estadual</strong>
           <span>Por enquanto, apenas Mato Grosso do Sul.</span>
         </div>
+
+        <button class="nav-item" type="button" id="theme-toggle" aria-label="Alternar tema escuro/claro">
+          <i data-lucide="moon"></i>
+          <span>Dark Mode</span>
+        </button>
       </aside>
 
       <main class="main-app">
@@ -55,11 +69,15 @@
             <h1>O que está acontecendo agora?</h1>
           </div>
           <div class="topbar-actions">
-            <button class="button secondary" type="button" data-view="compose">
+            <button class="button secondary" type="button" data-view="compose" aria-label="Criar novo factual">
               <i data-lucide="plus"></i>
               <span>Novo factual</span>
             </button>
-            <button class="user-chip" id="user-chip" type="button" data-view="profile">
+            <button class="button secondary" type="button" id="export-btn" aria-label="Exportar dados">
+              <i data-lucide="download"></i>
+              <span>Exportar</span>
+            </button>
+            <button class="user-chip" id="user-chip" type="button" data-view="profile" aria-label="Ver meu perfil">
               <span class="avatar">?</span>
               <div>
                 <strong>Visitante</strong>
@@ -107,21 +125,21 @@
           <div class="toolbar">
             <label class="search-field">
               <i data-lucide="search"></i>
-              <input id="search" type="search" placeholder="Buscar factual, cidade, fonte ou tag" />
+              <input id="search" type="search" placeholder="Buscar factual, cidade, fonte ou tag" aria-label="Buscar no feed" />
             </label>
-            <select id="filter-city">
+            <select id="filter-city" aria-label="Filtrar por cidade">
               <option value="">Todas as cidades</option>
             </select>
-            <select id="filter-category">
+            <select id="filter-category" aria-label="Filtrar por editoria">
               <option value="">Todas as editorias</option>
             </select>
-            <select id="filter-urgency">
+            <select id="filter-urgency" aria-label="Filtrar por urgência">
               <option value="">Urgência</option>
               <option>Alta</option>
               <option>Média</option>
               <option>Baixa</option>
             </select>
-            <select id="filter-status">
+            <select id="filter-status" aria-label="Filtrar por status">
               <option value="">Status</option>
               <option>Pista</option>
               <option>Em checagem</option>
@@ -135,12 +153,16 @@
           <div class="feed-layout">
             <div>
               <div class="quick-composer">
-                <button class="quick-composer-main" type="button" data-view="compose">
+                <button class="quick-composer-main" type="button" data-view="compose" aria-label="Compartilhar novo factual">
                   <span class="avatar small" id="quick-avatar">?</span>
                   <span>Compartilhar factual, pista ou atualização...</span>
                 </button>
               </div>
-              <div class="feed-list" id="feed-list" aria-live="polite"></div>
+              <div class="feed-list" id="feed-list" aria-live="polite" aria-busy="false"></div>
+              <div class="pagination-controls is-hidden" id="pagination-controls">
+                <button class="button secondary" type="button" id="load-more-btn">Carregar mais</button>
+                <p id="items-shown-count">Mostrando 0 de 0 factuais</p>
+              </div>
             </div>
 
             <aside class="right-panel">
@@ -170,7 +192,7 @@
               <h2>Compartilhar factual ou sugestão de pauta</h2>
             </div>
 
-            <form class="compose-form" id="pitch-form">
+            <form class="compose-form" id="pitch-form" novalidate>
               <label>
                 O que está acontecendo?
                 <textarea
@@ -179,13 +201,18 @@
                   rows="5"
                   placeholder="Ex: Bombeiros atendem ocorrência no centro. Há fumaça visível e bloqueio parcial na avenida."
                   required
+                  minlength="20"
+                  maxlength="2000"
                 ></textarea>
+                <span class="field-error" id="description-error"></span>
+                <span class="char-count"><span id="description-count">0</span>/2000</span>
               </label>
 
               <div class="form-grid fast">
                 <label>
                   Cidade de MS
                   <select id="city" name="city" required></select>
+                  <span class="field-error" id="city-error"></span>
                 </label>
                 <label>
                   Urgência
@@ -194,10 +221,12 @@
                     <option>Média</option>
                     <option>Baixa</option>
                   </select>
+                  <span class="field-error" id="urgency-error"></span>
                 </label>
                 <label>
                   Fonte inicial
-                  <input id="source" name="source" type="text" placeholder="morador, assessoria, boletim, fonte reservada" />
+                  <input id="source" name="source" type="text" placeholder="morador, assessoria, boletim, fonte reservada" minlength="3" />
+                  <span class="field-error" id="source-error"></span>
                 </label>
               </div>
 
