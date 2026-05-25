@@ -672,3 +672,392 @@ if (state.profile) {
 if (window.lucide) {
   window.lucide.createIcons();
 }
+
+// ============================================
+// NOVAS MELHORIAS - Funcionalidades Adicionais
+// ============================================
+
+// Sistema de Notificações Toast
+const Toast = {
+  show(message, type = 'info', title = null) {
+    const container = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    
+    const titles = {
+      success: 'Sucesso!',
+      error: 'Erro!',
+      warning: 'Atenção!',
+      info: 'Informação'
+    };
+    
+    toast.innerHTML = `
+      <div class="toast-content">
+        ${title ? `<span class="toast-title">${escapeHtml(title)}</span>` : ''}
+        <span class="toast-message">${escapeHtml(message)}</span>
+      </div>
+      <button class="toast-close" aria-label="Fechar notificação">
+        <i data-lucide="x"></i>
+      </button>
+    `;
+    
+    container.appendChild(toast);
+    
+    if (window.lucide) {
+      window.lucide.createIcons();
+    }
+    
+    // Auto remover após 5 segundos
+    setTimeout(() => this.remove(toast), 5000);
+    
+    // Evento de fechar
+    toast.querySelector('.toast-close').addEventListener('click', () => this.remove(toast));
+    
+    return toast;
+  },
+  
+  remove(toast) {
+    toast.style.animation = 'slideIn 0.3s ease-out reverse';
+    setTimeout(() => toast.remove(), 300);
+  },
+  
+  success(message, title) { return this.show(message, 'success', title); },
+  error(message, title) { return this.show(message, 'error', title); },
+  warning(message, title) { return this.show(message, 'warning', title); },
+  info(message, title) { return this.show(message, 'info', title); }
+};
+
+// Loading Overlay
+const Loading = {
+  show() {
+    document.getElementById('loading-overlay').classList.remove('is-hidden');
+    document.getElementById('feed-list')?.setAttribute('aria-busy', 'true');
+  },
+  hide() {
+    document.getElementById('loading-overlay').classList.add('is-hidden');
+    document.getElementById('feed-list')?.setAttribute('aria-busy', 'false');
+  }
+};
+
+// Dark Mode
+const ThemeToggle = {
+  init() {
+    const saved = localStorage.getItem('radarMS.theme');
+    if (saved === 'dark') {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      this.updateIcon(true);
+    }
+    
+    document.getElementById('theme-toggle')?.addEventListener('click', () => this.toggle());
+  },
+  
+  toggle() {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    const newTheme = isDark ? 'light' : 'dark';
+    
+    if (newTheme === 'dark') {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      localStorage.setItem('radarMS.theme', 'dark');
+      this.updateIcon(true);
+      Toast.success('Tema escuro ativado', 'Preferências');
+    } else {
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('radarMS.theme', 'light');
+      this.updateIcon(false);
+      Toast.success('Tema claro ativado', 'Preferências');
+    }
+  },
+  
+  updateIcon(isDark) {
+    const icon = document.querySelector('#theme-toggle i');
+    if (icon) {
+      icon.setAttribute('data-lucide', isDark ? 'sun' : 'moon');
+      if (window.lucide) window.lucide.createIcons();
+    }
+    const text = document.querySelector('#theme-toggle span');
+    if (text) text.textContent = isDark ? 'Light Mode' : 'Dark Mode';
+  }
+};
+
+// Validação de Formulários Melhorada
+const FormValidator = {
+  validateField(field) {
+    const errorEl = document.getElementById(`${field.id}-error`);
+    let isValid = true;
+    let errorMessage = '';
+    
+    // Required
+    if (field.hasAttribute('required') && !field.value.trim()) {
+      isValid = false;
+      errorMessage = 'Este campo é obrigatório';
+    }
+    
+    // Minlength
+    if (isValid && field.hasAttribute('minlength') && field.value.length < parseInt(field.minLength)) {
+      isValid = false;
+      errorMessage = `Mínimo de ${field.minLength} caracteres`;
+    }
+    
+    // Maxlength
+    if (isValid && field.hasAttribute('maxlength') && field.value.length > parseInt(field.maxLength)) {
+      isValid = false;
+      errorMessage = `Máximo de ${field.maxLength} caracteres`;
+    }
+    
+    // Update UI
+    if (errorEl) {
+      errorEl.textContent = errorMessage;
+    }
+    
+    field.classList.toggle('invalid', !isValid);
+    
+    return isValid;
+  },
+  
+  validateForm(form) {
+    const fields = form.querySelectorAll('input, select, textarea');
+    let isValid = true;
+    
+    fields.forEach(field => {
+      if (!this.validateField(field)) {
+        isValid = false;
+      }
+    });
+    
+    return isValid;
+  }
+};
+
+// Contador de Caracteres
+function setupCharCounter() {
+  const textarea = document.getElementById('description');
+  const counter = document.getElementById('description-count');
+  
+  if (textarea && counter) {
+    textarea.addEventListener('input', () => {
+      counter.textContent = textarea.value.length;
+      if (textarea.value.length >= 1900) {
+        counter.style.color = 'var(--accent)';
+      } else {
+        counter.style.color = 'var(--muted)';
+      }
+    });
+  }
+}
+
+// Paginação
+const Pagination = {
+  currentPage: 1,
+  itemsPerPage: 10,
+  totalItems: 0,
+  shownItems: 0,
+  
+  init() {
+    document.getElementById('load-more-btn')?.addEventListener('click', () => this.loadMore());
+  },
+  
+  update(total) {
+    this.totalItems = total;
+    this.shownItems = Math.min(total, this.currentPage * this.itemsPerPage);
+    
+    const controls = document.getElementById('pagination-controls');
+    const countEl = document.getElementById('items-shown-count');
+    const btn = document.getElementById('load-more-btn');
+    
+    if (countEl) {
+      countEl.textContent = `Mostrando ${this.shownItems} de ${total} factuais`;
+    }
+    
+    if (controls && btn) {
+      if (this.shownItems >= total) {
+        controls.classList.add('is-hidden');
+      } else {
+        controls.classList.remove('is-hidden');
+        btn.classList.remove('is-loading');
+      }
+    }
+  },
+  
+  loadMore() {
+    const btn = document.getElementById('load-more-btn');
+    if (btn) btn.classList.add('is-loading');
+    
+    // Simula loading
+    setTimeout(() => {
+      this.currentPage++;
+      renderFeed();
+      Toast.info('Mais factuais carregados');
+    }, 500);
+  },
+  
+  reset() {
+    this.currentPage = 1;
+    this.shownItems = 0;
+  }
+};
+
+// Exportação de Dados
+function exportData() {
+  try {
+    const data = {
+      perfil: state.profile,
+      factuais: state.pitches,
+      exportadoEm: new Date().toISOString(),
+      versao: '2.0'
+    };
+    
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `radar-ms-backup-${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    Toast.success('Dados exportados com sucesso!', 'Exportação');
+  } catch (error) {
+    Toast.error('Erro ao exportar dados', 'Exportação');
+    console.error('Export error:', error);
+  }
+}
+
+// Sanitização Extra para XSS
+function sanitizeInput(text) {
+  if (typeof text !== 'string') return text;
+  return escapeHtml(text.trim())
+    .replace(/javascript:/gi, '')
+    .replace(/on\w+=/gi, '');
+}
+
+// Melhorias no Render Feed com paginação
+function renderFeedWithPagination() {
+  const allPitches = getFilteredPitches();
+  Pagination.totalItems = allPitches.length;
+  
+  const startIndex = 0;
+  const endIndex = Pagination.currentPage * Pagination.itemsPerPage;
+  const pitchesToShow = allPitches.slice(startIndex, endIndex);
+  
+  feedList.innerHTML = '';
+  
+  if (!pitchesToShow.length) {
+    feedList.innerHTML = '<div class="empty-state">Nenhum factual encontrado com os filtros atuais.</div>';
+    Pagination.update(0);
+    renderStats();
+    return;
+  }
+  
+  pitchesToShow.forEach((pitch) => {
+    const card = document.createElement('article');
+    card.className = `pitch-card urgency-${slug(pitch.urgency)}`;
+    card.dataset.id = pitch.id;
+    card.innerHTML = `
+      <header>
+        <div>
+          <div class="author-row">
+            ${avatarMarkup(pitch.author, pitch.authorPhoto, 'mini-avatar')}
+            <span>${escapeHtml(pitch.author)} - ${escapeHtml(pitch.organization || 'Jornalista')}</span>
+          </div>
+          <h3>${escapeHtml(pitch.title)}</h3>
+        </div>
+        <span class="pill urgency-${slug(pitch.urgency)}">${escapeHtml(pitch.urgency)}</span>
+      </header>
+      <div class="meta-row">
+        <span class="pill">${escapeHtml(pitch.city)} - MS</span>
+        <span class="pill">${escapeHtml(pitch.category)}</span>
+        <span class="pill status-${slug(pitch.status)}">${escapeHtml(pitch.status)}</span>
+        <span class="pill">${escapeHtml(pitch.updatedAt)}</span>
+      </div>
+      <p>${escapeHtml(pitch.description)}</p>
+      <div class="meta-row">
+        <span><strong>Fonte inicial:</strong> ${escapeHtml(pitch.source || 'Não informada')}</span>
+      </div>
+      <div class="tag-row">
+        ${pitch.tags.map((tag) => `<span class="pill">#${escapeHtml(tag)}</span>`).join('')}
+      </div>
+      <div class="card-actions">
+        <button type="button" data-action="follow" data-id="${pitch.id}">Acompanhar (${pitch.followers})</button>
+        <button type="button" data-action="checking" data-id="${pitch.id}">Estou apurando (${pitch.checking})</button>
+        <button type="button" data-action="detail" data-id="${pitch.id}">Abrir pauta</button>
+      </div>
+    `;
+    feedList.appendChild(card);
+  });
+  
+  Pagination.update(allPitches.length);
+  renderStats();
+}
+
+// Sobrescrever renderFeed original
+const originalRenderFeed = renderFeed;
+renderFeed = renderFeedWithPagination;
+
+// Melhorias no Submit do Formulário
+if (form) {
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    
+    // Validação
+    if (!FormValidator.validateForm(form)) {
+      Toast.error('Verifique os campos destacados', 'Formulário inválido');
+      return;
+    }
+    
+    if (!state.profile) {
+      Toast.warning('Complete seu cadastro antes de publicar', 'Perfil necessário');
+      switchView('profile');
+      document.querySelector('#profile-name').focus();
+      return;
+    }
+    
+    Loading.show();
+    
+    // Simula processamento
+    setTimeout(() => {
+      const formData = new FormData(form);
+      const pitch = createPitch(formData);
+      state.pitches = [pitch, ...state.pitches];
+      savePitches();
+      fillFilterOptions();
+      Pagination.reset();
+      renderFeed();
+      form.reset();
+      citySelect.value = state.profile.city || 'Campo Grande';
+      document.getElementById('description-count').textContent = '0';
+      Loading.hide();
+      switchView('feed');
+      Toast.success('Factual publicado com sucesso!', 'Publicação');
+    }, 800);
+  });
+}
+
+// Setup dos listeners de validação
+document.querySelectorAll('#pitch-form input, #pitch-form select, #pitch-form textarea').forEach(field => {
+  field.addEventListener('blur', () => FormValidator.validateField(field));
+});
+
+// Export button
+document.getElementById('export-btn')?.addEventListener('click', exportData);
+
+// Inicializa melhorias
+ThemeToggle.init();
+Pagination.init();
+setupCharCounter();
+
+// Toast de boas-vindas
+if (!localStorage.getItem('radarMS.welcomeShown')) {
+  setTimeout(() => {
+    Toast.info('Bem-vindo ao Radar MS! Complete seu perfil para começar.', 'Dica');
+    localStorage.setItem('radarMS.welcomeShown', 'true');
+  }, 1500);
+}
+
+// Logging de erros
+window.addEventListener('error', (event) => {
+  console.error('Erro na aplicação:', event.message);
+  Toast.error('Ocorreu um erro inesperado', 'Erro');
+});
+
+console.log('✅ Melhorias carregadas: Toast, Loading, Dark Mode, Validação, Paginação, Exportação');
